@@ -1,9 +1,11 @@
 import AddDocumentBtn from "@/components/AddDocumentBtn";
 import Header from "@/components/Header";
 import { getDocuments } from "@/lib/actions/room.actions";
+import { dateConverter } from "@/lib/utils";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const Home = async () => {
@@ -35,7 +37,30 @@ const Home = async () => {
             />
           </div>
           <ul className="document-ul">
-
+            {roomDocuments.data.map(({ id, metadata, createdAt }: any) => (
+              <li className="document-list-item" key={id}>
+                <Link
+                  href={`/documents/${id}`}
+                  className="flex flex-1 items-center gap-4"
+                >
+                  <div className="hidden rounded-md bg-dark-500 p-2 sm:block">
+                    <Image
+                      src="/assets/icons/doc.svg"
+                      alt="file"
+                      width={40}
+                      height={40}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="line-clap-1 text-lg">{metadata.title}</p>
+                    <p className="text-sm font-light text-blue-100">
+                      Created about {dateConverter(createdAt)}
+                    </p>
+                  </div>
+                </Link>
+                {/* {add a delete buttons} */}
+              </li>
+            ))}
           </ul>
         </div>
       ) : (

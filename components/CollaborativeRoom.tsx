@@ -28,14 +28,20 @@ const CollaborativeRoom = ({
   ) => {
     if (e.key === "Enter") {
       setLoading(true);
+
       try {
         if (documentTitle !== roomMetadata.title) {
           const updatedDocument = await updateDocument(roomId, documentTitle);
-          if (updatedDocument) setEditing(false);
+
+          if (updatedDocument) {
+            setEditing(false);
+          }
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
+
+      setLoading(false);
     }
   };
 
@@ -58,8 +64,11 @@ const CollaborativeRoom = ({
   }, [roomId, documentTitle]);
 
   useEffect(() => {
-    if (editing && inputRef.current) inputRef.current.focus();
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+    }
   }, [editing]);
+
   return (
     <RoomProvider id={roomId}>
       <ClientSideSuspense fallback={<Loader />}>
