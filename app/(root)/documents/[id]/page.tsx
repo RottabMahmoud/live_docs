@@ -18,12 +18,14 @@ const Document = async ({ params: { id } }: SearchParamProps) => {
   const userIds = Object.keys(room.usersAccesses);
   const users = await getClerkUsers({ userIds });
 
-  const usersData = users.map((user: User) => ({
-    ...user,
-    userType: room.usersAccesses[user.email]?.includes("room:write")
-      ? "editor"
-      : "viewer",
-  }));
+  const usersData = users
+    .filter((user: User) => user?.email) // Filter out users without an email
+    .map((user: User) => ({
+      ...user,
+      userType: room.usersAccesses[user.email]?.includes("room:write")
+        ? "editor"
+        : "viewer",
+    }));
 
   const currentUserType = room.usersAccesses[
     clerkUser.emailAddresses[0].emailAddress
